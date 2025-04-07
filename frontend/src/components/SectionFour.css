@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Kurale&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cagliostro&display=swap');
+
+.section-four-container {
+  background-color: #ffffff;
+  padding: 60px 20px; /* Top and bottom padding added */
+  border-top: 1px solid #e0e0e0; /* Light gray border separating from above section */
+}
+
+.section-four-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+  gap: 40px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.section-four-text {
+  max-width: 500px;
+  text-align: left;
+  padding-right: 20px;
+}
+
+.section-four-heading {
+  font-family: 'Kurale', serif;
+  font-size: 2.2rem;
+  margin-bottom: 15px;
+  line-height: 1.2;
+}
+
+.section-four-description {
+  font-family: 'Cagliostro', sans-serif;
+  font-size: 1.2rem;
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+
+.section-four-button {
+  background-color: #800080;
+  color: #ffffff;
+  border: none;
+  padding: 12px 25px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  
+}
+
+.section-four-button:hover {
+  background-color: #6a006a;
+}
+
+.section-four-image {
+  position: relative;
+  padding-left: 40px; /* Space for border */
+}
+
+.section-four-image::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10%;
+  height: 80%;
+  width: 1px;
+  background-color: #e0e0e0;
+}
+
+.section-four-image img {
+  height: 350px;
+  width: 320px;
+  object-fit: cover;
+  border-radius: 8px;
+}

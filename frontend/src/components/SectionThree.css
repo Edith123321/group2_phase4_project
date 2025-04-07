@@ -1,0 +1,80 @@
+/* styles.css */
+@import url('https://fonts.googleapis.com/css2?family=Kurale&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cagliostro&display=swap');
+
+.section-three-container {
+  background-color: #ffffff;
+  height: 50vh; /* Reduced from 60vh */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 10px; /* Reduced vertical padding */
+}
+
+.section-three-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Changed from space-around */
+  width: 100%;
+  max-width: 1200px;
+  gap: 10px; /* Reduced gap */
+}
+
+.section-three-image {
+  position: relative;
+  padding-right: 40px; /* Space for border */
+}
+
+.section-three-image::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 10%;
+  height: 90%;
+  width: 1px;
+  background-color: #e0e0e0; /* Light gray border */
+}
+
+.section-three-image img {
+  height: 350px; /* Reduced from 400px */
+  width: 320px; /* Reduced from 350px */
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.section-three-text {
+  max-width: 500px;
+  text-align: left;
+  padding-left: 20px; /* Added left padding */
+}
+
+.section-three-heading {
+  font-family: 'Kurale', serif;
+  font-size: 2.2rem; /* Increased from 2rem */
+  margin-bottom: 15px;
+  line-height: 1.2;
+}
+
+.section-three-description {
+  font-family: 'Cagliostro', sans-serif;
+  font-size: 1.2rem; /* Increased from 1.1rem */
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+
+.section-three-button {
+  background-color: #800080;
+  color: #ffffff;
+  border: none;
+  padding: 12px 25px; /* Slightly larger */
+  cursor: pointer;
+  font-size: 1.1rem; /* Increased from 1rem */
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  font-family: sans-serif; /* Normal button font */
+}
+
+.section-three-button:hover {
+  background-color: #6a006a;
+}

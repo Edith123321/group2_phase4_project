@@ -1,0 +1,51 @@
+/* SectionOne.css */
+.hero-section {
+    position: relative;
+    width: 100%;
+    height: 70vh; /* Full viewport height */
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
+  
+  .background-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+  }
+  
+  .hero-content {
+    text-align: center;
+    z-index: 1;
+    padding: 0 20px;
+    max-width: 800px;
+  }
+  
+  .hero-title {
+    font-size: 3.5rem;
+    margin-bottom: 2rem;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  .shop-now-button {
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    background-color: #6a0dad; /* Purple color */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-weight: 600;
+  }
+  
+  .shop-now-button:hover {
+    background-color: #5a0b9a; /* Darker purple on hover */
+  }
