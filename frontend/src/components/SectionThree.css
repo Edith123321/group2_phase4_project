@@ -3,14 +3,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Cagliostro&display=swap');
 
 .section-three-container {
-  background-color: #ffffff;
-  height: 50vh; /* Reduced from 60vh */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0 10px; /* Reduced vertical padding */
-}
-
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 10px; /* Top and bottom padding added */
+    border-bottom: 1px solid #e0e0e0; /* Light gray border below */
+  }
+  
 .section-three-content {
   display: flex;
   align-items: center;
@@ -46,7 +46,8 @@
 .section-three-text {
   max-width: 500px;
   text-align: left;
-  padding-left: 20px; /* Added left padding */
+  padding-left: 60px; /* Added left padding */
+  border-left:1px solid #6a006a;
 }
 
 .section-three-heading {

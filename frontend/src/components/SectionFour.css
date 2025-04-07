@@ -21,7 +21,8 @@
 .section-four-text {
   max-width: 500px;
   text-align: left;
-  padding-right: 20px;
+  padding-right: 60px;
+  border-right:1px solid #6a006a;
 }
 
 .section-four-heading {
