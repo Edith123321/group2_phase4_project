@@ -60,15 +60,7 @@
   padding-left: 40px; /* Space for border */
 }
 
-.section-four-image::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 10%;
-  height: 80%;
-  width: 1px;
-  background-color: #e0e0e0;
-}
+
 
 .section-four-image img {
   height: 350px;
@@ -76,3 +68,74 @@
   object-fit: cover;
   border-radius: 8px;
 }
+/* Responsive Styles */
+@media (max-width: 992px) {
+    .section-four-content {
+      gap: 30px;
+    }
+    
+    .section-four-text {
+      padding-right: 30px;
+    }
+    
+    .section-four-image {
+      padding-left: 30px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .section-four-container {
+      padding: 40px 20px;
+    }
+    
+    .section-four-content {
+      flex-direction: column;
+      gap: 30px;
+      text-align: center;
+    }
+    
+    .section-four-text {
+      border-right: none;
+      padding-right: 0;
+      max-width: 100%;
+      text-align: center;
+      order: 2; /* Moves text below image */
+    }
+    
+    .section-four-image {
+      padding-left: 0;
+      order: 1; /* Moves image above text */
+    }
+    
+    .section-four-image img {
+      height: 300px;
+    }
+    
+    .section-four-heading {
+      font-size: 1.8rem;
+    }
+    
+    .section-four-description {
+      font-size: 1.1rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .section-four-heading {
+      font-size: 1.6rem;
+    }
+    
+    .section-four-description {
+      font-size: 1rem;
+    }
+    
+    .section-four-button {
+      padding: 10px 20px;
+      font-size: 1rem;
+    }
+    
+    .section-four-image img {
+      height: 250px;
+    }
+  }
+  
