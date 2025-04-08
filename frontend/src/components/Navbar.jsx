@@ -58,15 +58,14 @@ const styles = {
     gap: "1.5rem",
   },
   addButton: {
-    fontFamily: "'Kurale', serif",
+    fontFamily: "Arial",
     backgroundColor: "#6a0dad", // Purple
     color: "white",
     padding: "0.5rem 1.2rem",
-    fontSize: "1.2rem",
+    fontSize: "1rem",
     fontWeight: "600",
     borderRadius: "4px",
     textDecoration: "none",
-    fontSize: "1rem",
     transition: "background-color 0.3s",
     border: "none",
     cursor: "pointer",
