@@ -1,13 +1,13 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './SectionFive.css';
-import accessory from '../assets/accessory.png'// Replace with your actual image path
+import accessory from '../assets/accessory.png';
 
 const SectionFive = () => {
   const navigate = useNavigate();
 
   const handleShopNow = () => {
-    navigate('/products/accessories');
+    navigate('/products?category=jewelery'); // Using the exact category from the API
   };
 
   return (

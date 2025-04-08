@@ -1,0 +1,49 @@
+.product-list-container {
+    padding: 40px 20px;
+    background-color: #fafafa;
+  }
+  
+  .product-list-heading {
+    text-align: center;
+    font-family: 'Kurale', serif;
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: #800080;
+  }
+  
+  .product-grid {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+  
+  .loading-text {
+    text-align: center;
+    padding: 40px;
+    font-size: 1.2rem;
+    color: #6a006a;
+  }
+  
+  .controls {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+  }
+  
+  .controls input,
+  .controls select {
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    border-radius: 6px;
+    font-family: 'Cagliostro', sans-serif;
+  }
+  
+  .no-results {
+    text-align: center;
+    padding: 20px;
+    color: #800080;
+    font-family: 'Kurale', serif;
+  }

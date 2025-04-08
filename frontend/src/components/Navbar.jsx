@@ -1,8 +1,11 @@
-// frontend/src/components/Navbar.jsx
 import { FaShoppingCart } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useProductContext } from "../context/ProductContext"; // Make sure path is correct
 
-const Navbar = ({ cartItemCount }) => {
+const Navbar = () => {
+  const { cart } = useProductContext();
+  const cartItemCount = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+
   return (
     <nav style={styles.navbar}>
       {/* Logo */}
@@ -10,14 +13,13 @@ const Navbar = ({ cartItemCount }) => {
         <h1 style={styles.logo}>MINTMADE</h1>
       </Link>
 
-      {/* Right-aligned buttons */}
+      
       <div style={styles.buttonGroup}>
-        {/* Purple "Add Items" Button */}
         <Link to="/add-product" style={styles.addButton}>
           Add Items
         </Link>
 
-        {/* Cart Icon with Badge */}
+        
         <Link to="/cart" style={styles.cartLink}>
           <FaShoppingCart size={24} style={styles.cartIcon} />
           {cartItemCount > 0 && (
@@ -58,20 +60,19 @@ const styles = {
     gap: "1.5rem",
   },
   addButton: {
-    fontFamily: "Arial",
-    backgroundColor: "#6a0dad", // Purple
+    fontFamily: "'Kurale', serif", 
+    backgroundColor: "#6a0dad",
     color: "white",
     padding: "0.5rem 1.2rem",
     fontSize: "1rem",
-    fontWeight: "600",
     borderRadius: "4px",
     textDecoration: "none",
     transition: "background-color 0.3s",
     border: "none",
     cursor: "pointer",
-    ":hover": {
-      backgroundColor: "#5a0b9a",
-    },
+  },
+  addButtonHover: {
+    backgroundColor: "#800080",
   },
   cartLink: {
     position: "relative",
