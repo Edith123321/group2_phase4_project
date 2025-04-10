@@ -60,8 +60,8 @@ const styles = {
     gap: "1.5rem",
   },
   addButton: {
-    fontFamily: "'Kurale', serif", 
-    backgroundColor: "#6a0dad",
+    fontFamily: "'Arial', serif", 
+    backgroundColor:" #800080",
     color: "white",
     padding: "0.5rem 1.2rem",
     fontSize: "1rem",

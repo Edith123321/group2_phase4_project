@@ -7,7 +7,7 @@ const SectionFive = () => {
   const navigate = useNavigate();
 
   const handleShopNow = () => {
-    navigate('/products?category=jewelery'); // Using the exact category from the API
+    navigate('/products?category=jewelery'); 
   };
 
   return (

@@ -13,7 +13,6 @@ const ProductList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [filterCategory, setFilterCategory] = useState('all');
 
-  // Read category from URL when component mounts
   useEffect(() => {
     const urlCategory = searchParams.get('category');
     if (urlCategory) {

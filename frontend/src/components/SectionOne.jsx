@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './SectionOne.css';
-import video from '../assets/jewelry.mp4' // We'll create this for styling
+import video from '../assets/jewelry.mp4' 
 
 const SectionOne = () => {
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ const SectionOne = () => {
 
   return (
     <div className="hero-section">
-      {/* Video Background - Replace with your actual video path */}
+      
       <video 
         autoPlay 
         loop 

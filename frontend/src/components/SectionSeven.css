@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Kurale&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cagliostro&display=swap');
+
+.section-seven {
+    background-color: white;
+    padding: 4rem 0;
+  }
+  
+  .section-seven-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    padding: 0 1.5rem;
+  }
+  
+  .section-seven-image {
+    flex: 1;
+  }
+  
+  .section-seven-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  .section-seven-content {
+    flex: 1;
+  }
+  
+  .section-seven-title {
+    font-family: 'Kurale', serif;
+    font-size: 2.25rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.3;
+  }
+  
+  .section-seven-benefits {
+    
+    list-style: decimal;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .benefit-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    font-family: 'Cagliostro';
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+  
+  .benefit-icon {
+    font-size: 1.5rem;
+    margin-top: 0.2rem;
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .section-seven-container {
+      flex-direction: column;
+    }
+    
+    .section-seven-title {
+      font-size: 1.8rem;
+      text-align: center;
+    }
+    
+    .benefit-item {
+      font-size: 1rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .section-seven {
+      padding: 2rem 0;
+    }
+    
+    .section-seven-title {
+      font-size: 1.5rem;
+    }
+    
+    .benefit-icon {
+      font-size: 1.2rem;
+    }
+  }
