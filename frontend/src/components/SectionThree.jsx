@@ -7,7 +7,7 @@ const SectionThree = () => {
   const navigate = useNavigate();
 
   const handleShopNow = () => {
-    navigate('/products?category=women%27s%20clothing'); // URL encoded "women's clothing"
+    navigate('/products?category=women%27s%20clothing'); 
   };
 
   return (

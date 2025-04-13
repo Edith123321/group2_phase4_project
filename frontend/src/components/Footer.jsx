@@ -53,8 +53,8 @@ const Footer = () => {
         <div className="footer-column">
           <h4 className="footer-heading">Contact Us</h4>
           <ul className="footer-contact">
-            <li>hello@mintmade.com</li>
-            <li>+254 700 123456</li>
+            <li>edithgithinji2020@gmail.com</li>
+            <li>+254 711 769 886</li>
             <li>Nairobi, Kenya</li>
           </ul>
         </div>

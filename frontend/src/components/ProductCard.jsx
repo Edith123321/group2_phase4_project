@@ -1,6 +1,6 @@
 import React from 'react';
 import { useProductContext } from '../context/ProductContext';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaTrash, FaEdit } from 'react-icons/fa';
 import './ProductCard.css';
 
@@ -9,7 +9,7 @@ const ProductCard = ({ product }) => {
   const navigate = useNavigate();
 
   const handleEdit = () => {
-    navigate(`/edit-product/${product.id}`);
+    navigate(`/edit/${product.id}`);
   };
 
   const handleDelete = async () => {
@@ -22,10 +22,12 @@ const ProductCard = ({ product }) => {
   };
 
   return (
+
     <div className="product-card">
       <img src={product.image} alt={product.name} className="product-image" />
       <div className="product-details">
-        <h3 className="product-name">{product.name}</h3>
+        <h3 className="product-name">{product.title}</h3>
+        
         <p className="product-price">Ksh {product.price}</p>
         <div className="product-buttons">
           <button onClick={() => addToCart(product)} className="add-to-cart">
@@ -44,6 +46,7 @@ const ProductCard = ({ product }) => {
         </div>
       </div>
     </div>
+ 
   );
 };
 

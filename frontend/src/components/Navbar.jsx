@@ -1,6 +1,6 @@
 import { FaShoppingCart } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { useProductContext } from "../context/ProductContext"; // Make sure path is correct
+import { useProductContext } from "../context/ProductContext"; 
 
 const Navbar = () => {
   const { cart } = useProductContext();
@@ -61,10 +61,10 @@ const styles = {
   },
   addButton: {
     fontFamily: "'Kurale', serif", 
-    backgroundColor: "#6a0dad",
+    background: "linear-gradient(135deg, #800080, #8a2be2)",
     color: "white",
     padding: "0.5rem 1.2rem",
-    fontSize: "1rem",
+    fontSize: "1.2rem",
     borderRadius: "4px",
     textDecoration: "none",
     transition: "background-color 0.3s",
@@ -72,7 +72,7 @@ const styles = {
     cursor: "pointer",
   },
   addButtonHover: {
-    backgroundColor: "#800080",
+    background: "linear-gradient(135deg, #5a0b9d, #7b1fa2)",
   },
   cartLink: {
     position: "relative",
