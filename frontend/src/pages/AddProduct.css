@@ -1,0 +1,324 @@
+/* AddProduct.css */
+.add-product-container {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  .add-product-header {
+    margin-bottom: 2.5rem;
+    text-align: center;
+  }
+  
+  .add-product-header h1 {
+    font-size: 2rem;
+    color: #6b46c1;
+    margin-bottom: 0.5rem;
+  }
+  
+  .add-product-header p {
+    color: #718096;
+    font-size: 1rem;
+  }
+  
+  .add-product-form {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(107, 70, 193, 0.1);
+  }
+  
+  .form-section {
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #edf2f7;
+  }
+  
+  .form-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+  
+  .section-title {
+    font-size: 1.25rem;
+    color: #2d3748;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-left: 1rem;
+  }
+  
+  .section-title::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 20px;
+    background: #6b46c1;
+    border-radius: 2px;
+  }
+  
+  .form-row {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-row .form-group {
+    flex: 1;
+  }
+  
+  .form-group {
+    margin-bottom: 1.25rem;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #4a5568;
+    font-size: 0.95rem;
+  }
+  
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    width: 100%;
+    padding: 0.85rem 1.25rem;
+    border: 2px solid #e9d8fd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #faf5ff;
+  }
+  
+  .form-group input:focus,
+  .form-group textarea:focus,
+  .form-group select:focus {
+    outline: none;
+    border-color: #9f7aea;
+    box-shadow: 0 0 0 4px rgba(159, 122, 234, 0.2);
+    background: white;
+  }
+  
+  .form-group textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+  
+  .image-upload-label {
+    display: block;
+    width: 100%;
+    height: 200px;
+    border: 2px dashed #e9d8fd;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    position: relative;
+    background: #faf5ff;
+  }
+  
+  .image-upload-label:hover {
+    border-color: #9f7aea;
+  }
+  
+  .upload-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #9f7aea;
+    gap: 0.5rem;
+  }
+  
+  .image-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .hidden-input {
+    display: none;
+  }
+  
+  .additional-images-preview {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .additional-image {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  
+  .additional-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .remove-image-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: rgba(226, 32, 32, 0.8);
+    color: white;
+    border: none;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 0 0 0 6px;
+  }
+  
+  .variant-input-group {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .variant-input-group input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e9d8fd;
+    border-radius: 6px;
+    font-size: 1rem;
+  }
+  
+  .add-variant-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 1rem;
+    background: #6b46c1;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.2s ease;
+  }
+  
+  .add-variant-btn:hover {
+    background: #553c9a;
+  }
+  
+  .variant-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .variant-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: #f0e6ff;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: #553c9a;
+  }
+  
+  .variant-tag button {
+    background: none;
+    border: none;
+    color: #9f7aea;
+    cursor: pointer;
+    display: flex;
+    padding: 0.1rem;
+  }
+  
+  .variant-tag button:hover {
+    color: #6b46c1;
+  }
+  
+  .color-circle {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    vertical-align: middle;
+    border: 1px solid #e2e8f0;
+  }
+  
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  
+  .cancel-btn {
+    padding: 0.85rem 1.75rem;
+    background: #f8f9fa;
+    color: #4a5568;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .cancel-btn:hover {
+    background: #edf2f7;
+  }
+  
+  .submit-btn {
+    padding: 0.85rem 2rem;
+    background: linear-gradient(135deg, #6b46c1, #8a2be2);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .submit-btn:hover {
+    background: linear-gradient(135deg, #5a3aa8, #7b1fa2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(107, 70, 193, 0.25);
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .form-row {
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    
+    .add-product-container {
+      padding: 0 1rem;
+    }
+    
+    .add-product-form {
+      padding: 1.5rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .form-actions {
+      flex-direction: column;
+    }
+    
+    .cancel-btn,
+    .submit-btn {
+      width: 100%;
+    }
+  }
+  
+
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
