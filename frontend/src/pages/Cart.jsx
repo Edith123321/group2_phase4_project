@@ -3,7 +3,7 @@ import { useProductContext } from '../context/ProductContext';
 import { FaTrash, FaArrowLeft, FaShoppingBag } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import './Cart.css';
-import lock from'../assets/lock.png'
+import lock from '../assets/lock.png';
 
 const Cart = () => {
   const { cart, removeFromCart, updateQuantity, clearCart } = useProductContext();
@@ -11,10 +11,16 @@ const Cart = () => {
   const shipping = subtotal > 5000 ? 0 : 300; 
   const total = subtotal + shipping;
 
-  const handleQuantityChange = (id, newQuantity) => {
+  const handleQuantityChange = (id, selectedColor, selectedSize, newQuantity) => {
     if (newQuantity >= 1) {
-      updateQuantity(id, newQuantity);
+      updateQuantity(id, selectedColor, selectedSize, newQuantity);
     }
+  };
+
+  // Function to get color name from color code (if needed)
+  const getColorName = (colorCode) => {
+    // You might want to map color codes to names if your seed data uses codes
+    return colorCode; // Return as-is if already using names
   };
 
   return (
@@ -44,25 +50,51 @@ const Cart = () => {
         <div className="cart-content">
           <div className="cart-items">
             {cart.map(item => (
-              <div key={`${item.id}-${item.selectedColor}-${item.selectedSize}`} className="cart-item">
-                <img src={item.image} alt={item.name} className="item-image" />
+              <div key={`${item.id}-${item.colors}-${item.size}`} className="cart-item">
+                <img src={item.main_image} alt={item.title} className="item-image" />
                 <div className="item-details">
                   <h3>{item.title}</h3>
                   {item.selectedColor && (
                     <p className="item-option">
-                      Color: <span className="color-circle" style={{ backgroundColor: item.selectedColor }} />
+                      Color: {getColorName(item.color)}
+                      {item.colors && item.colors.includes(item.color) && (
+                        <span 
+                          className="color-circle" 
+                          style={{ 
+                            backgroundColor: item.selectedColor.toLowerCase(),
+                            display: 'inline-block',
+                            width: '15px',
+                            height: '15px',
+                            borderRadius: '50%',
+                            marginLeft: '8px',
+                            border: '1px solid #ccc'
+                          }} 
+                        />
+                      )}
                     </p>
                   )}
-                  {item.selectedSize && <p className="item-option">Size: {item.selectedSize}</p>}
+                  {item.selectedSize && (
+                    <p className="item-option">Size: {item.selectedSize}</p>
+                  )}
                   <div className="quantity-control">
                     <button 
-                      onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                      onClick={() => handleQuantityChange(
+                        item.id, 
+                        item.selectedColor, 
+                        item.selectedSize, 
+                        item.quantity - 1
+                      )}
                       disabled={item.quantity <= 1}
                     >
                       -
                     </button>
                     <span>{item.quantity}</span>
-                    <button onClick={() => handleQuantityChange(item.id, item.quantity + 1)}>
+                    <button onClick={() => handleQuantityChange(
+                      item.id, 
+                      item.selectedColor, 
+                      item.selectedSize, 
+                      item.quantity + 1
+                    )}>
                       +
                     </button>
                   </div>

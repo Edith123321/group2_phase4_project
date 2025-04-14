@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const ProductContext = createContext();
 
@@ -16,18 +17,14 @@ export const ProductProvider = ({ children }) => {
   const [wishlist, setWishlist] = useState([]);
   const [recentlyViewed, setRecentlyViewed] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [displayedProducts, setDisplayedProducts] = useState([])
 
   // Load data from localStorage on initial render
   useEffect(() => {
     const loadPersistedData = () => {
       try {
         const savedCart = localStorage.getItem('cart');
-        const savedWishlist = localStorage.getItem('wishlist');
-        const savedRecentlyViewed = localStorage.getItem('recentlyViewed');
-
         if (savedCart) setCart(JSON.parse(savedCart));
-        if (savedWishlist) setWishlist(JSON.parse(savedWishlist));
-        if (savedRecentlyViewed) setRecentlyViewed(JSON.parse(savedRecentlyViewed));
       } catch (error) {
         console.error('Error loading persisted data:', error);
       }
@@ -54,7 +51,7 @@ export const ProductProvider = ({ children }) => {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/products.json');
+      const response = await fetch('http://localhost:5000/products');
       const data = await response.json();
       setProducts(data);
     } catch (error) {
@@ -121,8 +118,25 @@ export const ProductProvider = ({ children }) => {
   };
 
   // Product CRUD operations
-  const addProduct = (newProduct) => {
-    setProducts(prev => [...prev, { ...newProduct, id: Date.now() }]);
+  const addProduct = async (newProduct) => {
+    try {
+      const response = await fetch('http://localhost:5000/products', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newProduct)
+      });
+  
+      if (!response.ok) throw new Error('Failed to add product');
+      
+      const addedProduct = await response.json();
+      setProducts(prev => [...prev, addedProduct]);
+      return addedProduct;
+    } catch (error) {
+      console.error('Error adding product:', error);
+      throw error;
+    }
   };
 
   const editProduct = (id, updatedProduct) => {
@@ -133,9 +147,36 @@ export const ProductProvider = ({ children }) => {
     );
   };
 
-  const deleteProduct = (id) => {
-    setProducts(prev => prev.filter(product => product.id !== id));
-    setCart(prev => prev.filter(item => item.id !== id));
+  const deleteProduct = async (productId) => {
+    try {
+      const response = await fetch(`http://localhost:5000/products/${productId}`, {
+        method: 'DELETE'
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete product: ${response.status}`);
+      }
+
+      
+      setProducts(prevProducts => 
+        prevProducts.filter(product => product.id !== productId)
+      );
+      
+      setDisplayedProducts(prevDisplayed => 
+        prevDisplayed.filter(product => product.id !== productId)
+        
+      );
+
+     
+      return { success: true };
+      
+    } catch (error) {
+      console.error('Delete product error:', error);
+      return { 
+        success: false, 
+        error: error.message || 'Failed to delete product' 
+      };
+    }
   };
 
   // Wishlist functions

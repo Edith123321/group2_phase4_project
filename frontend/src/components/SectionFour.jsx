@@ -7,7 +7,7 @@ const SectionFour = () => {
   const navigate = useNavigate();
 
   const handleShopNow = () => {
-    navigate('/products?category=men%27s%20clothing');
+    navigate('/products?category=men%27s%20wear');
   };
 
   return (

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useProductContext } from '../context/ProductContext';
 import ProductCard from '../components/ProductCard';
 import './ProductDetail.css';
+import Footer from '../components/Footer';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -62,6 +63,7 @@ const ProductDetail = () => {
   if (!product) return <div className="error">Product not found</div>;
 
   return (
+    <>
     <div className="product-detail-container">
       <button onClick={() => navigate(-1)} className="back-button">
         ← Back to Products
@@ -70,17 +72,8 @@ const ProductDetail = () => {
       <div className="product-detail-grid">
         {/* Product Images */}
         <div className="product-images">
-          <img src={product.image} alt={product.title} className="main-image" />
-          <div className="thumbnail-container">
-            {[product.image, ...(product.additionalImages || [])].map((img, i) => (
-              <img 
-                key={i} 
-                src={img} 
-                alt={`${product.title} ${i + 1}`} 
-                className="thumbnail"
-              />
-            ))}
-          </div>
+          <img src={product.main_image} alt={product.title} className="main-image" />
+          
         </div>
 
         {/* Product Info */}
@@ -183,6 +176,8 @@ const ProductDetail = () => {
         </div>
       )}
     </div>
+    <Footer />
+    </>
   );
 };
 

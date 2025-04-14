@@ -4,6 +4,7 @@ import ProductCard from '../components/ProductCard';
 import './ProductList.css';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { useProductContext } from '../context/ProductContext';
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -12,6 +13,7 @@ const ProductList = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
   const [filterCategory, setFilterCategory] = useState('all');
+  const { addToCart} = useProductContext()
 
   useEffect(() => {
     const urlCategory = searchParams.get('category');
@@ -20,16 +22,18 @@ const ProductList = () => {
     }
   }, [searchParams]);
 
+  // Fetch products from the backend
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch('https://fakestoreapi.com/products');
+        const res = await fetch('http://localhost:5000/products');
+        if (!res.ok) throw new Error('Failed to fetch products');
         const data = await res.json();
         setProducts(data);
         setDisplayedProducts(data);
         setLoading(false);
       } catch (error) {
-        console.error('Failed to fetch products:', error);
+        console.error('Error:', error);
         setLoading(false);
       }
     };
@@ -37,6 +41,7 @@ const ProductList = () => {
     fetchProducts();
   }, []);
 
+  // Filter products when search or category changes
   useEffect(() => {
     let filtered = [...products];
 
@@ -55,15 +60,18 @@ const ProductList = () => {
     setDisplayedProducts(filtered);
   }, [searchQuery, filterCategory, products]);
 
-  const handleCategoryChange = (category) => {
-    setFilterCategory(category);
-    // Update URL when category changes
-    if (category === 'all') {
+  // Update searchParams and state for category change
+  useEffect(() => {
+    if (filterCategory === 'all') {
       searchParams.delete('category');
     } else {
-      searchParams.set('category', category);
+      searchParams.set('category', filterCategory);
     }
     setSearchParams(searchParams);
+  }, [filterCategory, searchParams]);
+
+  const handleCategoryChange = (category) => {
+    setFilterCategory(category);
   };
 
   if (loading) return <p className="loading-text">Loading products...</p>;
@@ -87,9 +95,9 @@ const ProductList = () => {
             value={filterCategory}
           >
             <option value="all">All</option>
-            <option value="men's clothing">For Him</option>
-            <option value="women's clothing">For Her</option>
-            <option value="jewelery">Accessories</option>
+            <option value="men's wear">For Him</option>
+            <option value="women's wear">For Her</option>
+            <option value="jewelry">Accessories</option>
           </select>
         </div>
 

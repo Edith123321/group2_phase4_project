@@ -26,7 +26,19 @@
   .product-details {
     padding: 20px;
     
+    
   }
+
+    
+ .product-link {
+  text-decoration: none; 
+  color: inherit;
+}
+
+.product-link:hover {
+  text-decoration: none;
+}
+  
   
   .product-name {
     font-family: 'Kurale', serif;
@@ -34,6 +46,7 @@
     color: #333;
     margin-bottom: 10px;
     line-height: 1.3;
+    
   }
   
   .product-price {

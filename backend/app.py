@@ -1,267 +1,155 @@
-from flask import Flask,make_response,jsonify,request
+from flask import Flask, request, jsonify, make_response
 from flask_migrate import Migrate
 from flask_cors import CORS
-from flask_restful import Api,Resource
+from flask_restful import Api, Resource
+from werkzeug.exceptions import BadRequest
+from models import db, Product, CartItem
+import json
 
-from models import db,Product,Cart,User,CartItem
+# App configuration
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
+app.json.compact = False
 
-app=Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///app.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
-app.json.compact=False
+# CORS setup
+CORS(app, resources={r"/*": {
+    "origins": ["http://localhost:3000"],
+    "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    "allow_headers": ["Content-Type"],
+    "supports_credentials": True
+}})
 
-migrate=Migrate(app,db)
+@app.after_request
+def after_request(response):
+    response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
+    response.headers['Access-Control-Allow-Methods'] = 'GET,POST,PUT,PATCH,DELETE,OPTIONS'
+    response.headers['Access-Control-Allow-Credentials'] = 'true'
+    return response
+
+
+# Initialize extensions
 db.init_app(app)
-api=Api(app)
-CORS(app)
+migrate = Migrate(app, db)
+api = Api(app)
 
-class Products(Resource):
+# Helper functions
+def validate_required_fields(data, fields):
+    if not all(field in data for field in fields):
+        raise BadRequest(f"Missing required fields: {', '.join(fields)}")
+
+# Resources
+class ProductList(Resource):
     def get(self):
-        products= [product.to_dict() for product in Product.query.all()]
-        response= make_response(jsonify(products),200)
-        return response
-    
+        products = [product.to_dict() for product in Product.query.all()]
+        return make_response(jsonify(products), 200)
+
     def post(self):
-        data= request.get_json()
-        if not data:
-            return {'error':'Unable to derive data'}
-        new_product= Product(
-            name= data.get('name'),
-            price= data.get('price'),
-            description= data.get('description'),
-            image= data.get('image'),
-            category= data.get('category'),
-            quantity= data.get('quantity')
+        data = request.get_json()
+        required_fields = ['title', 'price', 'description', 'main_image', 'category']
+        validate_required_fields(data, required_fields)
+
+        new_product = Product(
+            title=data['title'],
+            price=float(data['price']),
+            description=data['description'],
+            main_image=data['main_image'],
+            category=data['category'],
+            additional_images=data.get('additional_images', []),
+            colors=data.get('colors', []),
+            sizes=data.get('sizes', []),
+            stock=data.get('stock', 0)
         )
+        
         db.session.add(new_product)
         db.session.commit()
+        return make_response(jsonify(new_product.to_dict()), 201)
 
-        response= make_response(jsonify({
-            "id":new_product.id,
-            "name":new_product.name,
-            "price":new_product.price,
-            "description":new_product.description,
-            "category":new_product.category,
-            "quantity":new_product.quantity
-        }),201
-        )
-        return response
-
-api.add_resource(Products,'/products')
-
-class ProductByID(Resource):
-    def get(self,id):
-        product= Product.query.filter(Product.id==id).first()
+class ProductResource(Resource):
+    def get(self, id):
+        product = Product.query.get(id)
         if not product:
-            return {'error':'Product not found'},404
-        response= make_response(jsonify(product.to_dict()),200)
-        return response
-    def patch(self,id):
-        data= request.get_json()
-        if not data:
-            return {'error':'No data provided'},400
-        product= Product.query.filter(Product.id==id).first()
+            return {'error': 'Product not found'}, 404
+        return make_response(jsonify(product.to_dict()), 200)
+
+    def patch(self, id):
+        product = Product.query.get(id)
         if not product:
-            return {'error':'Product not found'},404
-        for key,value in data.items():
-            if hasattr(product,key):
-                setattr(product,key,value)
+            return {'error': 'Product not found'}, 404
+
+        data = request.get_json()
+        fields_to_update = ['title', 'price', 'description', 'main_image', 'category', 'stock']
+        for field in fields_to_update:
+            if field in data:
+                setattr(product, field, data[field])
+
+        for field in ['additional_images', 'colors', 'sizes']:
+            if field in data:
+                setattr(product, field, data.get(field, []))
+
         db.session.commit()
-        response= make_response(jsonify(product.to_dict()),200)
-        return response
-    
-    def delete(self,id):
-        product= Product.query.filter(Product.id==id).first()
+        return make_response(jsonify(product.to_dict()), 200)
+
+    def delete(self, id):
+        product = Product.query.get(id)
         if not product:
-            return {'error':'Product not found'},404
+            return {'error': 'Product not found'}, 404
+
+        # Delete associated cart items first
+        CartItem.query.filter_by(product_id=id).delete()
+
         db.session.delete(product)
         db.session.commit()
+        return {'message': 'Product deleted'}, 200
 
-        return make_response({'message':'Product deleted successfully'},200)
-
-api.add_resource(ProductByID,'/products/<int:id>')
-
-class Carts(Resource):
+class CartResource(Resource):
     def get(self):
-        carts= [cart.to_dict() for cart in Cart.query.all()]
-        response= make_response(jsonify(carts),200)
-        return response
-    
+        cart_items = [item.to_dict() for item in CartItem.query.all()]
+        return make_response(jsonify(cart_items), 200)
+
     def post(self):
-        data= request.get_json()
-        if not data:
-            return make_response({'error':'No data provided'},400)
-        new_cart= Cart(
-            user_id=data.get('user_id'),
-            product_id=data.get('product_id'),
-            quantity=data.get('quantity'),
-            created_at= data.get('created_at'),
-            updated_at= data.get('updated_at')
-        )
-        db.session.add(new_cart)
+        data = request.get_json()
+        required_fields = ['product_id', 'selected_color', 'selected_size']
+        validate_required_fields(data, required_fields)
+
+        product = Product.query.get(data['product_id'])
+        if not product:
+            return {'error': 'Product not found'}, 404
+
+        if (data['selected_color'] and data['selected_color'] not in (product.colors or [])) or \
+           (data['selected_size'] and data['selected_size'] not in (product.sizes or [])):
+            return {'error': 'Invalid variant selection'}, 400
+
+        cart_item = CartItem.query.filter_by(
+            product_id=data['product_id'],
+            selected_color=data['selected_color'],
+            selected_size=data['selected_size']
+        ).first()
+
+        quantity = data.get('quantity', 1)
+        if cart_item:
+            cart_item.quantity += quantity
+        else:
+            cart_item = CartItem(
+                product_id=data['product_id'],
+                selected_color=data['selected_color'],
+                selected_size=data['selected_size'],
+                quantity=quantity
+            )
+            db.session.add(cart_item)
+
         db.session.commit()
+        return make_response(jsonify(cart_item.to_dict()), 201)
 
-        response= make_response(jsonify(new_cart({
-            'id':new_cart.id,
-            'user_id':new_cart.user_id,
-            'product_id':new_cart.product_id,
-            'quantity':new_cart.quantity,
-            'created_at':new_cart.created_at,
-            'updated_at':new_cart.updated_at
-        })),201)
-        return response
-    
-api.add_resource(Carts,'/carts')
+# Add resources to API
+api.add_resource(ProductList, '/products')
+api.add_resource(ProductResource, '/products/<int:id>')
+api.add_resource(CartResource, '/cart')
 
-class CartByID(Resource):
-    def get(self,id):
-        cart = Cart.query.filter_by(id=id).first()
-        if not cart:
-            return {'error':'Cart not found'},404
-        return make_response(jsonify(cart.to_dict()),200)
-    
-    def patch(self,id):
-        cart = Cart.query.filter_by(id=id).first()
-        if not cart:
-            return {'error':'Cart not found'},404
-        data= request.get_json()
-        if not data:
-            return {'error':'No data provided'},400
-        for key,value in data.items():
-            if hasattr(cart,key):
-                setattr(cart,key,value)
-        db.session.commit()
-
-        response= make_response(jsonify(cart.to_dict()),200)
-        return response
-    
-    def delete(self,id):
-        cart= Cart.query.filter_by(id=id).first()
-        if not cart:
-            return {'error':'Cart not found'},404
-        db.session.delete(cart)
-        db.session.commit()
-
-        return {'message':'Cart deleted successfully'}
-    
-api.add_resource(CartByID,'/carts/<int:id>')
-
-class Users(Resource):
-    def get(self):
-        users= [user.to_dict() for user in User.query.all()]
-        response= make_response(jsonify(users),200)
-        return response
-    
-    def post(self):
-        data= request.get_json()
-        if not data or 'username' not in data:
-            return {'error':'Username is required'},400
-        new_user= User(username= data.get('username'))
-        db.session.add(new_user)
-        db.session.commit()
-
-        response= make_response(jsonify({
-            'id': new_user.id,
-            'username': new_user.username
-        }),201)
-        return response
-api.add_resource(Users,'/users')
-
-class UserByID(Resource):
-    def get(self,id):
-        user= User.query.filter_by(id=id).first()
-        if not user:
-            return {'error':'User not found'},404
-        response= make_response(jsonify(user.to_dict()),200)
-        return response
-    
-    def patch(self,id):
-        user = User.query.filter_by(id=id).first()
-        if not user:
-            return {'error':'User not found'},404
-        data= request.get_json()
-        if not data:
-            return {'error':'No data provided'},400
-        for key,value in data.items():
-            if hasattr(user,key):
-                setattr(user,key,value)
-        db.session.commit()
-        response= make_response(jsonify(user.to_dict()),200)    
-        return response
-    
-    def delete(self,id):
-        user= User.query.filter(User.id==id).first()
-        if not user:
-            return {'error':'User not found'},404
-        db.session.delete(user)
-        db.session.commit()
-
-        return {'message':'User deleted successfully'},200
-
-api.add_resource(UserByID,'/users/<int:id>')
-
-class CartItems(Resource):
-    def get(self):
-        items= [item.to_dict() for item in CartItem.query.all()]
-        response= make_response(jsonify(items),200)
-        return response
-    
-    def post(self):
-        data= request.get_json()
-        if not data:
-            return {'error':'No data provided'},400
-        new_item = CartItem(
-            cart_id= data.get('cart_id'),
-            product_id=data.get('product_id'),
-            quantity=data.get('quantity')
-        )
-        db.session.add(new_item)
-        db.session.commit()
-
-        response= make_response(jsonify({
-            'id':new_item.id,
-            'cart_id':new_item.cart_id,
-            'product_id':new_item.product_id,
-            'quantity':new_item.quantity
-        }),201)
-        return response
-
-api.add_resource(CartItems, '/cart_items')
-
-class CartItemById(Resource):
-    def get(self,id):
-        item = CartItem.query.filter(CartItem.id==id).first()
-        if not item:
-            return {'error':'Item not found'},404
-        response = make_response(jsonify(item.to_dict()),200)
-        return response
-    
-    def patch(self,id):
-        item = CartItem.query.filter(CartItem.id==id).first()
-        if not item:
-            return {'error':'Item not found'},404
-        data= request.get_json()
-        if not data:
-            return {'error':'No data provided'},400
-        for key,value in data.items():
-            if hasattr(item,key):
-                setattr(item,key,value)
-        db.session.commit()
-
-        response= make_response(jsonify(item.to_dict()),200)
-        return response
-    
-    def delete(self,id):
-        item= CartItem.query.filter_by(id=id).first()
-        if not item:
-            return {'error':'Item not found'},404
-        db.session.delete(item)
-        db.session.commit()
-
-        response= make_response(jsonify({'message':'Item deleted successfully'}),200)
-        return response
-
-api.add_resource(CartItemById,'/cart_items/<int:id>')
-        
-if __name__=='__main__':
-    app.run(port=5555, debug=True)
+# Run app
+if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()  # Ensure database tables are created
+    app.run(port=5000, debug=True)

@@ -5,18 +5,36 @@ import './EditProduct.css';
 const EditProduct = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [product, setProduct] = useState(null);
+  const [product, setProduct] = useState({
+    title: '',
+    price: '',
+    description: '',
+    main_image: '',
+    category: '',
+    additional_images: [],
+    colors: [],
+    sizes: [],
+    stock: 0
+  });
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await fetch(`https://fakestoreapi.com/products/${id}`);
-        const data = await res.json();
-        setProduct(data);
-        setLoading(false);
+        const response = await fetch(`http://localhost:5000/products/${id}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setProduct({
+          ...data,
+          price: data.price.toString()
+        });
       } catch (err) {
-        console.error('Error fetching product:', err);
+        setError(`Failed to load product: ${err.message}`);
+      } finally {
         setLoading(false);
       }
     };
@@ -25,69 +43,97 @@ const EditProduct = () => {
   }, [id]);
 
   const handleChange = (e) => {
-    setProduct({ ...product, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setProduct(prev => ({
+      ...prev,
+      [name]: name === 'stock' ? parseInt(value) : value
+    }));
+  };
+
+  const handleArrayChange = (e, field) => {
+    const values = e.target.value.split(',').map(item => item.trim());
+    setProduct(prev => ({
+      ...prev,
+      [field]: values
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setError('');
+    setSuccess('');
+  
     try {
-      const res = await fetch(`https://fakestoreapi.com/products/${id}`, {
-        method: 'PUT',
-        body: JSON.stringify(product),
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch(`http://localhost:5000/products/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include', // Only if you're using cookies/sessions
+        body: JSON.stringify({
+          ...product,
+          price: parseFloat(product.price),
+        }),
       });
-
-      if (res.ok) {
-        alert('Product updated!');
-        navigate('/products');
-      } else {
-        alert('Failed to update.');
+  
+      if (!response.ok) {
+        throw new Error(`Failed to update product. Status: ${response.status}`);
       }
+  
+      setSuccess('Product updated successfully!');
+      setTimeout(() => navigate('/products'), 1000); // Navigate after a brief delay
     } catch (err) {
-      console.error('Update error:', err);
+      setError(`Update failed: ${err.message}`);
     }
   };
+  
+
 
   if (loading) return <p>Loading...</p>;
-  if (!product) return <p>Product not found.</p>;
+  if (error) return <p className="error">{error}</p>;
 
   return (
     <div className="edit-product-container">
       <h2>Edit Product</h2>
+      {success && <p className="success">{success}</p>}
       <form onSubmit={handleSubmit}>
         <label>
           Title:
-          <input name="title" value={product.title} onChange={handleChange} />
+          <input name="title" value={product.title} onChange={handleChange} required />
         </label>
         <label>
           Price:
-          <input
-            name="price"
-            type="number"
-            value={product.price}
-            onChange={handleChange}
-          />
-        </label>
-        <label htmlFor="">
-          Category:
-          <input 
-          name='category'
-          type="text"
-          value={product.category} 
-          onChange = {handleChange}
-          />
-          
+          <input name="price" value={product.price} onChange={handleChange} required />
         </label>
         <label>
           Description:
-          <textarea
-            name="description"
-            value={product.description}
-            onChange={handleChange}
-          />
+          <textarea name="description" value={product.description} onChange={handleChange} />
         </label>
-        <button type="submit" className ="save-changes-form">Save Changes</button>
+        <label>
+          Main Image URL:
+          <input name="main_image" value={product.main_image} onChange={handleChange} />
+        </label>
+        <label>
+          Category:
+          <input name="category" value={product.category} onChange={handleChange} />
+        </label>
+        <label>
+          Additional Images (comma-separated):
+          <input value={product.additional_images.join(', ')} onChange={(e) => handleArrayChange(e, 'additional_images')} />
+        </label>
+        <label>
+          Colors (comma-separated):
+          <input value={product.colors.join(', ')} onChange={(e) => handleArrayChange(e, 'colors')} />
+        </label>
+        <label>
+          Sizes (comma-separated):
+          <input value={product.sizes.join(', ')} onChange={(e) => handleArrayChange(e, 'sizes')} />
+        </label>
+        <label>
+          Stock:
+          <input name="stock" type="number" value={product.stock} onChange={handleChange} />
+        </label>
+        <button type="submit" className="save-button">Save Changes</button>
       </form>
     </div>
   );

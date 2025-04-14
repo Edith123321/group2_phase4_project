@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useProductContext } from '../context/ProductContext';
 import { FiUpload, FiPlus, FiX } from 'react-icons/fi';
 import './AddProduct.css';
 
 const AddProduct = () => {
-  const { addProduct } = useProductContext();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: '',
@@ -20,6 +18,8 @@ const AddProduct = () => {
   const [newSize, setNewSize] = useState('');
   const [additionalImages, setAdditionalImages] = useState([]);
   const [imagePreview, setImagePreview] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,18 +28,31 @@ const AddProduct = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      setError('Image size should be less than 2MB');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      if (reader.result) {
         setFormData(prev => ({ ...prev, image: reader.result }));
         setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
+        setError('');
+      }
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleAdditionalImages = (e) => {
     const files = Array.from(e.target.files);
+    if (files.some(file => file.size > 2 * 1024 * 1024)) {
+      setError('One or more images exceed 2MB limit');
+      return;
+    }
+
     files.forEach(file => {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -77,25 +90,50 @@ const AddProduct = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const productToAdd = {
-      ...formData,
-      price: parseFloat(formData.price),
-      additionalImages,
-      rating: { rate: 0, count: 0 } // Initialize with no ratings
-    };
-    addProduct(productToAdd);
-    navigate('/products');
+    setIsSubmitting(true);
+    setError('');
+
+    try {
+      if (!formData.image) {
+        throw new Error('Main image is required');
+      }
+
+      const productToAdd = {
+        title: formData.title,
+        price: parseFloat(formData.price),
+        description: formData.description,
+        category: formData.category,
+        main_image: formData.image,
+        additional_images: additionalImages,
+        colors: formData.colors,
+        sizes: formData.sizes,
+        stock: 0
+      };
+
+      const response = await fetch('http://localhost:5000/products', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(productToAdd),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to add product');
+      }
+
+      navigate('/products');
+    } catch (err) {
+      setError(err.message || 'Failed to add product');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const categories = [
-    "men's clothing",
-    "women's clothing",
-    "jewelery",
-    "electronics",
-    "accessories"
-  ];
+  const categories = ["men's wear", "women's wear", "jewelry"];
 
   return (
     <div className="add-product-container">
@@ -103,6 +141,8 @@ const AddProduct = () => {
         <h1>Add New Product</h1>
         <p>Fill in the details below to add a new product to your store</p>
       </div>
+
+      {error && <div className="error-message">{error}</div>}
 
       <form onSubmit={handleSubmit} className="add-product-form">
         <div className="form-section">
@@ -300,8 +340,8 @@ const AddProduct = () => {
           <button type="button" onClick={() => navigate('/products')} className="cancel-btn">
             Cancel
           </button>
-          <button type="submit" className="submit-btn">
-            Add Product
+          <button type="submit" className="submit-btn" disabled={isSubmitting}>
+            {isSubmitting ? 'Adding...' : 'Add Product'}
           </button>
         </div>
       </form>
