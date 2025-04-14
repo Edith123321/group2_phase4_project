@@ -99,19 +99,18 @@ export const ProductProvider = ({ children }) => {
     );
   };
 
-  const updateQuantity = (id, newQuantity, color = null, size = null) => {
-    if (newQuantity < 1) return;
-    
-    setCart(prevCart =>
-      prevCart.map(item =>
-        item.id === id && 
-        item.selectedColor === color && 
-        item.selectedSize === size
-          ? { ...item, quantity: newQuantity }
-          : item
-      )
-    );
-  };
+  // In your CartContext.js
+const updateQuantity = (id, selectedColor, selectedSize, newQuantity) => {
+  setCart(prevCart => 
+    prevCart.map(item => 
+      item.id === id && 
+      item.selectedColor === selectedColor && 
+      item.selectedSize === selectedSize
+        ? { ...item, quantity: newQuantity }
+        : item
+    )
+  );
+};
 
   const clearCart = () => {
     setCart([]);
