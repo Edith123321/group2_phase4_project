@@ -18,7 +18,7 @@ const ProductCard = ({ product }) => {
   
     try {
       await deleteProduct(product.id);
-      window.location.href = '/products'; // Force full page reload to /products
+      window.location.href = '/products'; 
     } catch (error) {
       console.error('Error deleting product:', error.message);
     }

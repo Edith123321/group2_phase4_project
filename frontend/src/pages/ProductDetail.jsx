@@ -23,17 +23,15 @@ const ProductDetail = () => {
       
       if (foundProduct) {
         setProduct(foundProduct);
-        // Set default selections
         if (foundProduct.colors?.length) setSelectedColor(foundProduct.colors[0]);
         if (foundProduct.sizes?.length) setSelectedSize(foundProduct.sizes[0]);
         
-        // Find related products (same category, excluding current product)
         const related = products.filter(
           p => p.category === foundProduct.category && p.id !== foundProduct.id
         ).slice(0, 4);
         setRelatedProducts(related);
         
-        // Add to recently viewed
+        
         addToRecentlyViewed(foundProduct);
       }
       setLoading(false);
@@ -45,7 +43,6 @@ const ProductDetail = () => {
   const handleAddToCart = () => {
     if (!product) return;
     
-    // Validate selections if options exist
     if (product.colors?.length && !selectedColor) {
       alert('Please select a color');
       return;

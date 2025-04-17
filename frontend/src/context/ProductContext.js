@@ -99,7 +99,7 @@ export const ProductProvider = ({ children }) => {
     );
   };
 
-  // In your CartContext.js
+
 const updateQuantity = (id, selectedColor, selectedSize, newQuantity) => {
   setCart(prevCart => 
     prevCart.map(item => 

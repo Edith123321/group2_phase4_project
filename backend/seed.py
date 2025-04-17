@@ -295,4 +295,4 @@ if __name__ == '__main__':
         db.drop_all()
         db.create_all()
         seed_products()
-    print("🌿 Database seeding completed!")
+    print("Database seeding completed!")
